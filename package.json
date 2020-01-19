@@ -1,0 +1,27 @@
+{
+  "name": "worker-injector-generator-plugin",
+  "version": "1.0.0",
+  "description": "A very simple webpack plugin to generate injection code for workers that share common code with the main web build.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onzag/worker-injector-generator-plugin.git"
+  },
+  "keywords": [
+    "splitChunks",
+    "webWorker",
+    "worker",
+    "webpack",
+    "webpack4",
+    "plugin"
+  ],
+  "author": "Edward González",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/onzag/worker-injector-generator-plugin/issues"
+  },
+  "homepage": "https://github.com/onzag/worker-injector-generator-plugin#readme"
+}

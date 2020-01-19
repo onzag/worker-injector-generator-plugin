@@ -5,7 +5,7 @@ NOTE this is a temporary fix for https://github.com/webpack/webpack/issues/6472 
 
 # Usage (Example with hashes)
 
-```
+```javascript
 const WorkerInjectorGeneratorPlugin = require("worker-injector-generator-plugin");
 
 module.exports = {
@@ -112,3 +112,52 @@ The injector then generates the following code (this is for `worker-injector-feb
 And it will be sent to your output path (in the example above `path.resolve(__dirname, 'dist')`)
 
 Make sure you are using UMD as the library target.
+
+# Options
+
+
+## options.name (required)
+
+The name of the generated injector worker file, you might include [hash] in the name eg.
+
+```javascript
+new WorkerInjectorGeneratorPlugin({
+  name: my-injector-[hash].js,
+  importScripts: [],
+})
+```
+
+The file will be generated at your output path.
+
+## options.importScripts (required)
+
+An array of strings to be used as the scripts to be imported, you might include hash in their names as well
+
+```javascript
+new WorkerInjectorGeneratorPlugin({
+  name: my-injector-[hash].js,
+  importScripts: ["javascript-in-common-[hash].js", "my-actual-worker-[hash].js"],
+})
+```
+
+Notice that the resolution URL in the browser once loaded it's calculated using the output.publicPath so if your public path is eg. `/resources/my-content`
+
+It will resolve to the URL to eg. `http://mysite.com/resources/my-content/javascript-in-common-[hash].js`
+
+## options.publicPath
+
+A public path to override the public path provided by the configuration eg.
+
+```javascript
+new WorkerInjectorGeneratorPlugin({
+  name: my-injector-[hash].js,
+  importScripts: ["javascript-in-common-[hash].js", "my-actual-worker-[hash].js"],
+  publicPath: "/workers/",
+})
+```
+
+Now it will resolve to the URL eg. `http://mysite.com/workers/javascript-in-common-[hash].js`
+
+If no publicPath is set here nor in the output options, the public path will be / that is the root url
+
+`http://mysite.com/javascript-in-common-[hash].js`
