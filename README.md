@@ -1,6 +1,8 @@
 # worker-injector-generator-plugin
 A very simple webpack plugin to generate injection code for workers that share common code with the main web build.
 
+Now supports async loading (prefer not using this option during development)
+
 NOTE this is a temporary fix for https://github.com/webpack/webpack/issues/6472 and it's based on the discussion there.
 
 # Usage (Example with hashes)
@@ -28,6 +30,7 @@ module.exports = {
         "commons-[hash].js",
         "worker-[hash].js",
       ],
+      isAsync: true,
     }),
     new WorkerInjectorGeneratorPlugin({
       name: "service-worker-injector-[hash].js",
@@ -107,7 +110,13 @@ You would then include the injector into your build, and add it as a worker (do 
 
 The injector then generates the following code (this is for `worker-injector-feb0c7712b38d060b184.js`)
 
+For non-async code
+
 `var base=location.protocol+"//"+location.host+(location.port ? ":"+location.port: "")+"/rest/resource/";window=self;self.importScripts(base+"commons-feb0c7712b38d060b184.js",base+"worker-feb0c7712b38d060b184.js");`
+
+The async version is larger
+
+`var base=location.protocol+"//"+location.host+(location.port ? ":"+location.port: "")+"/rest/resource/";window=self;function h(r){return r.text()};function e(m){Function(m)()};fetch(base+"commons-feb0c7712b38d060b184.js").then(h).then(e);fetch(base+"worker-feb0c7712b38d060b184.js").then(h).then(e);`
 
 And it will be sent to your output path (in the example above `path.resolve(__dirname, 'dist')`)
 
@@ -135,8 +144,22 @@ An array of strings to be used as the scripts to be imported, you might include 
 
 ```javascript
 new WorkerInjectorGeneratorPlugin({
-  name: my-injector-[hash].js,
+  name: "my-injector-[hash].js",
   importScripts: ["javascript-in-common-[hash].js", "my-actual-worker-[hash].js"],
+})
+```
+
+## options.isAsync
+
+Whether to use fetch rather than importScripts for async loading and execution
+
+You might want to keep isAsync as false (or not set as it's the default value) when using in a development environment as the debugging is much nicer when using standard importScripts as the script context is lost, so you will have a harder time debugging when using isAsync
+
+```javascript
+new WorkerInjectorGeneratorPlugin({
+  name: "my-injector-[hash].js",
+  importScripts: ["javascript-in-common-[hash].js", "my-actual-worker-[hash].js"],
+  isAsync: true,
 })
 ```
 
@@ -150,7 +173,7 @@ A public path to override the public path provided by the configuration eg.
 
 ```javascript
 new WorkerInjectorGeneratorPlugin({
-  name: my-injector-[hash].js,
+  name: "my-injector-[hash].js",
   importScripts: ["javascript-in-common-[hash].js", "my-actual-worker-[hash].js"],
   publicPath: "/workers/",
 })
