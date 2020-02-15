@@ -49,7 +49,7 @@ WorkerInjectorGeneratorPlugin.prototype.apply = function (compiler) {
 
     // now we generate the file content, pretty standard, first build the base url that will be
     // the protocol + hostname + port (if available)
-    var fileContent = 'var base=location.protocol+"//"+location.host+(location.port ? ":"+location.port: "")+' +
+    var fileContent = 'var base=location.protocol+"//"+location.host+' +
       JSON.stringify(publicPathToUse) + ';window=self;';
     if (isAsync) {
       fileContent += 'function h(r){return r.text()};function e(m){Function(m)()};'
