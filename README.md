@@ -5,6 +5,18 @@ Now supports async loading (prefer not using this option during development)
 
 NOTE this is a temporary fix for https://github.com/webpack/webpack/issues/6472 and it's based on the discussion there.
 
+# Important Notice!
+
+Be careful when using isAsync true and then immediately using the worker you have created, in fact, I would not recommend
+using isAsync: true anymore unless you are absolutely certain the content of the application would load before the worker considers itself ready,
+or you have some form of external event handling to inform your application when the worker is actually ready, using certain libraries such as eg.
+comlink would cause errors that cause the app to hang indeterminately.
+
+The issue lays on the fact that the worker considers itself ready when using async loading, which might cause your app to misbehave as it's actually
+not truly ready but still loading, if you try to fetch any event and wait for the response, because the worker is not truly ready you get no response
+whatsoever.
+
+
 # Usage (Example with hashes)
 
 ```javascript
@@ -131,7 +143,7 @@ The name of the generated injector worker file, you might include [hash] in the 
 
 ```javascript
 new WorkerInjectorGeneratorPlugin({
-  name: my-injector-[hash].js,
+  name: "my-injector-[hash].js",
   importScripts: [],
 })
 ```
