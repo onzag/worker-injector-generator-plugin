@@ -1,6 +1,6 @@
 {
   "name": "worker-injector-generator-plugin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A very simple webpack plugin to generate injection code for workers that share common code with the main web build.",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "plugin"
   ],
   "author": "Edward González",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/onzag/worker-injector-generator-plugin/issues"
   },
